@@ -1,0 +1,99 @@
+{
+  "name": "GameResult",
+  "type": "object",
+  "properties": {
+    "session_id": {
+      "type": "string",
+      "description": "Reference to the session"
+    },
+    "subject_id": {
+      "type": "string",
+      "description": "Subject identifier"
+    },
+    "game_index": {
+      "type": "number",
+      "description": "Which game number in the session (0-indexed)"
+    },
+    "n_back_level": {
+      "type": "number",
+      "description": "N-back level for this game (1, 2, or 3)"
+    },
+    "true_positives": {
+      "type": "number",
+      "default": 0
+    },
+    "false_positives": {
+      "type": "number",
+      "default": 0
+    },
+    "true_negatives": {
+      "type": "number",
+      "default": 0
+    },
+    "false_negatives": {
+      "type": "number",
+      "default": 0
+    },
+    "total_score": {
+      "type": "number",
+      "default": 0
+    },
+    "avg_response_time": {
+      "type": "number",
+      "default": 0,
+      "description": "Average spacebar press response time in ms"
+    },
+    "trial_count": {
+      "type": "number",
+      "description": "Number of trials in this game"
+    },
+    "stimulus_timing": {
+      "type": "number",
+      "description": "Time between stimuli in ms"
+    },
+    "trial_data": {
+      "type": "array",
+      "description": "Detailed per-trial data",
+      "items": {
+        "type": "object",
+        "properties": {
+          "trial_index": {
+            "type": "number"
+          },
+          "stimulus": {
+            "type": "string"
+          },
+          "is_target": {
+            "type": "boolean"
+          },
+          "responded": {
+            "type": "boolean"
+          },
+          "response_time": {
+            "type": "number"
+          },
+          "correct": {
+            "type": "boolean"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "started_at": {
+      "type": "string",
+      "description": "When the game started"
+    },
+    "completed_at": {
+      "type": "string",
+      "description": "When the game ended"
+    }
+  },
+  "required": [
+    "session_id",
+    "subject_id",
+    "game_index",
+    "n_back_level"
+  ]
+}

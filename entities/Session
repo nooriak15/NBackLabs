@@ -1,0 +1,126 @@
+{
+  "name": "Session",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Session title"
+    },
+    "session_code": {
+      "type": "string",
+      "description": "Unique code participants use to join"
+    },
+    "total_games": {
+      "type": "number",
+      "description": "Total number of games in the session"
+    },
+    "distribution_mode": {
+      "type": "string",
+      "enum": [
+        "count",
+        "percentage"
+      ],
+      "default": "count",
+      "description": "How N-back levels are distributed"
+    },
+    "distribution_1back": {
+      "type": "number",
+      "default": 0,
+      "description": "Count or percentage of 1-back games"
+    },
+    "distribution_2back": {
+      "type": "number",
+      "default": 0,
+      "description": "Count or percentage of 2-back games"
+    },
+    "distribution_3back": {
+      "type": "number",
+      "default": 0,
+      "description": "Count or percentage of 3-back games"
+    },
+    "stimulus_set": {
+      "type": "array",
+      "description": "Array of stimulus objects with type and value",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "image"
+            ]
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "target_rate": {
+      "type": "number",
+      "default": 30,
+      "description": "Percentage of trials that are targets (0-100)"
+    },
+    "time_between_stimuli": {
+      "type": "number",
+      "default": 2000,
+      "description": "Milliseconds between stimuli"
+    },
+    "stimulus_display_time": {
+      "type": "number",
+      "default": 500,
+      "description": "Milliseconds to display each stimulus"
+    },
+    "trials_per_game": {
+      "type": "number",
+      "default": 20,
+      "description": "Number of trials per game"
+    },
+    "number_of_stimuli": {
+      "type": "number",
+      "default": 8,
+      "description": "Number of unique stimuli drawn from the stimulus set per game"
+    },
+    "include_tutorial": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether to include tutorial game(s) before the session starts"
+    },
+    "tutorial_n_back_levels": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "enum": [
+          1,
+          2,
+          3
+        ]
+      },
+      "default": [
+        1
+      ],
+      "description": "N-back levels used for the tutorial games (one tutorial game per level selected)"
+    },
+    "include_tutorial_in_analytics": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether to include tutorial game results in analytics/scoring"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "completed"
+      ],
+      "default": "active",
+      "description": "Session status"
+    }
+  },
+  "required": [
+    "title",
+    "session_code",
+    "total_games"
+  ]
+}

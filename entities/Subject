@@ -1,0 +1,37 @@
+{
+  "name": "Subject",
+  "type": "object",
+  "properties": {
+    "session_id": {
+      "type": "string",
+      "description": "Reference to the session"
+    },
+    "subject_id": {
+      "type": "string",
+      "description": "Researcher-assigned subject identifier"
+    },
+    "name": {
+      "type": "string",
+      "description": "Optional display name"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "in_progress",
+        "completed"
+      ],
+      "default": "pending",
+      "description": "Subject's progress status"
+    },
+    "games_completed": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of games completed"
+    }
+  },
+  "required": [
+    "session_id",
+    "subject_id"
+  ]
+}

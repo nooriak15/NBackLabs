@@ -1,0 +1,47 @@
+{
+  "name": "StimulusSet",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the stimulus set"
+    },
+    "stimulus_type": {
+      "type": "string",
+      "enum": [
+        "text",
+        "image"
+      ],
+      "default": "text",
+      "description": "Type of stimuli in this set"
+    },
+    "stimuli": {
+      "type": "array",
+      "description": "Array of stimulus objects",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "image"
+            ]
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "stimulus_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of stimuli in this set"
+    }
+  },
+  "required": [
+    "name",
+    "stimulus_type"
+  ]
+}
