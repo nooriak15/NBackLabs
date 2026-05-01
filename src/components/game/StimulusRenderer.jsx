@@ -18,6 +18,9 @@ export default function StimulusRenderer({ stimulus, visible }) {
                 src={stimulus.value}
                 alt="stimulus"
                 className="w-full h-full object-contain p-6"
+                loading="eager"
+                decoding="sync"
+                draggable={false}
               />
             ) : (
               <span className="text-9xl font-bold select-none text-foreground font-mono leading-none">

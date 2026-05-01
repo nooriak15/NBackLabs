@@ -49,6 +49,13 @@ export default function GamePlay() {
   const [saveError, setSaveError] = useState(null);
   const [resultsSaved, setResultsSaved] = useState(false);
 
+  // Image preload state — fetched once before the first game so per-trial
+  // <img> mounts paint instantly from cache instead of waiting on Supabase
+  // Storage. Without this, stimulus_display_time is unreliable for image
+  // sets (the image often hasn't even arrived before the trial advances).
+  const [preloadProgress, setPreloadProgress] = useState({ loaded: 0, total: 0 });
+  const [preloadDone, setPreloadDone] = useState(false);
+
   // Load session and subject
   useEffect(() => {
     const load = async () => {
@@ -83,6 +90,49 @@ export default function GamePlay() {
     };
     load();
   }, [sessionCode, subjectId]);
+
+  // Preload image stimuli into the browser cache before any trial runs.
+  // Text-only sets skip this and just mark preload done immediately.
+  useEffect(() => {
+    if (!session) return;
+    const stimuli = Array.isArray(session.stimulus_set) ? session.stimulus_set : [];
+    const imageUrls = stimuli
+      .filter(s => s && s.type === 'image' && typeof s.value === 'string')
+      .map(s => s.value);
+
+    if (imageUrls.length === 0) {
+      setPreloadProgress({ loaded: 0, total: 0 });
+      setPreloadDone(true);
+      return;
+    }
+
+    setPreloadProgress({ loaded: 0, total: imageUrls.length });
+    setPreloadDone(false);
+
+    let cancelled = false;
+    let loaded = 0;
+    // Hold strong refs so the browser doesn't garbage-collect decoded images
+    // before the game starts.
+    const refs = imageUrls.map(url => {
+      const img = new Image();
+      const done = () => {
+        if (cancelled) return;
+        loaded += 1;
+        setPreloadProgress({ loaded, total: imageUrls.length });
+        if (loaded >= imageUrls.length) setPreloadDone(true);
+      };
+      img.onload = done;
+      img.onerror = done; // Don't block the whole game on a single broken URL
+      img.src = url;
+      return img;
+    });
+
+    return () => {
+      cancelled = true;
+      // Clear handlers so any late-firing event doesn't update unmounted state
+      refs.forEach(img => { img.onload = null; img.onerror = null; });
+    };
+  }, [session]);
 
   // Start a game
   const startGame = useCallback(() => {
@@ -316,7 +366,18 @@ export default function GamePlay() {
             <div className="text-sm text-muted-foreground mb-6">
               {session.trials_per_game} trials · {session.time_between_stimuli}ms interval
             </div>
-            <Button onClick={startGame} size="lg" className="gap-2">
+            {!preloadDone && preloadProgress.total > 0 && (
+              <p className="text-xs text-muted-foreground mb-3 flex items-center justify-center gap-2">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                Preparing stimuli ({preloadProgress.loaded} / {preloadProgress.total})
+              </p>
+            )}
+            <Button
+              onClick={startGame}
+              size="lg"
+              className="gap-2"
+              disabled={!preloadDone}
+            >
               <Play className="w-5 h-5" />
               Start Game
             </Button>
